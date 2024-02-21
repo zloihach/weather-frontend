@@ -1,34 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
     const endpoint = 'http://localhost:3000/weather';
-    function fetchDataAndRenderCharts() {
-        fetch(endpoint)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(dataArray => {
-                const labels = dataArray.map(data => new Date(data.date).toLocaleString());
-                const temperatureData = dataArray.map(data => data.temperature);
-                const humidityData = dataArray.map(data => data.humidity);
-                const lightData = dataArray.map(data => data.light);
-                const pressureData = dataArray.map(data => data.pressure);
-
-                renderChart('temperatureChart', 'Температура', '°C', labels, temperatureData);
-                renderChart('humidityChart', 'Влажность', '%', labels, humidityData);
-                renderChart('lightChart', 'Освещенность', 'Люкс', labels, lightData);
-                renderChart('pressureChart', 'Давление', 'мм рт. ст.', labels, pressureData);
-            })
-            .catch(error => {
-                console.error('Ошибка при выполнении запроса к API:', error);
-            });
-    }
-    fetchDataAndRenderCharts();
-    setInterval(fetchDataAndRenderCharts, 5000);
+    fetchDataAndRenderCharts(endpoint);
+    setInterval(() => {
+        fetchDataAndRenderCharts(endpoint);
+    }, 5000);
 });
 
-function renderChart(canvasId, label, unit, labels, dataValues) {
+function fetchDataAndRenderCharts(endpoint) {
+    fetch(endpoint)
+        .then(response => response.json())
+        .then(dataArray => {
+            const labels = dataArray.map(data => new Date(data.date).toLocaleString());
+            const temperatureData = dataArray.map(data => data.temperature);
+            const humidityData = dataArray.map(data => data.humidity);
+            const lightData = dataArray.map(data => data.light);
+            const pressureData = dataArray.map(data => data.pressure);
+
+            renderChart('temperatureChart', 'Температура', '°C', labels, temperatureData, 'rgb(255, 99, 132)', [5, 5]);
+            renderChart('humidityChart', 'Влажность', '%', labels, humidityData, 'rgb(54, 162, 235)');
+            renderChart('lightChart', 'Освещенность', 'Люкс', labels, lightData, 'rgb(255, 206, 86)', [10, 5]);
+            renderChart('pressureChart', 'Давление', 'мм рт. ст.', labels, pressureData, 'rgb(75, 192, 192)');
+        })
+        .catch(error => {
+            console.error('Ошибка при выполнении запроса к API:', error);
+        });
+}
+
+function renderChart(canvasId, label, unit, labels, dataValues, color, borderDash = []) {
     const ctx = document.getElementById(canvasId).getContext('2d');
     if (window.myCharts === undefined) {
         window.myCharts = {};
@@ -44,8 +42,16 @@ function renderChart(canvasId, label, unit, labels, dataValues) {
                 label: label,
                 data: dataValues,
                 fill: false,
-                borderColor: getRandomColor(),
-                tension: 0.1
+                borderColor: color,
+                tension: 0.1,
+                borderDash: borderDash,
+                borderWidth: 2,
+                pointBackgroundColor: color,
+                pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: color,
+                pointRadius: 5,
+                pointHoverRadius: 7,
             }]
         },
         options: {
@@ -56,17 +62,28 @@ function renderChart(canvasId, label, unit, labels, dataValues) {
                         display: true,
                         text: unit
                     }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Время'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                }
+            },
+            layout: {
+                padding: {
+                    top: 30,
+                    right: 20,
+                    bottom: 0,
+                    left: 0
                 }
             }
         }
     });
-}
-
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
 }
