@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        canvas {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            width: 100%;
+            text-align: center;
+            color: #333;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Температура</h2>
+    <canvas id="temperatureChart"></canvas>
+    <h2>Влажность</h2>
+    <canvas id="humidityChart"></canvas>
+    <h2>Освещенность</h2>
+    <canvas id="lightChart"></canvas>
+    <h2>Давление</h2>
+    <canvas id="pressureChart"></canvas>
+
+    <script src="./js/script.js"></script>
+</body>
+</html>
