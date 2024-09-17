@@ -63,7 +63,7 @@ function updateChart(canvasId, label, unit, labels, dataValues, color, borderDas
                 scales: {
                     y: {
                         beginAtZero: false,
-                        reverse: true, // Разворачиваем ось Y
+                        reverse: false, // Разворачиваем ось Y
                         title: {
                             display: true,
                             text: unit
